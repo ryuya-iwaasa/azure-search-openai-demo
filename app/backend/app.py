@@ -58,15 +58,15 @@ APPLICATIONINSIGHTS_CONNECTION_STRING = os.getenv("APPLICATIONINSIGHTS_CONNECTIO
 
 app = Blueprint("routes", __name__, static_folder='static')
 
-@bp.route("/")
+@app.route("/")
 async def index():
-    return await bp.send_static_file("index.html")
+    return await app.send_static_file("index.html")
 
-@bp.route("/favicon.ico")
+@app.route("/favicon.ico")
 async def favicon():
-    return await bp.send_static_file("favicon.ico")
+    return await app.send_static_file("favicon.ico")
 
-@bp.route("/assets/<path:path>")
+@app.route("/assets/<path:path>")
 async def assets(path):
     return await send_from_directory("static/assets", path)
 
@@ -77,7 +77,7 @@ async def assets(path):
 # この例を自己完結的なものにするために、アプリ内からblobストレージにコンテンツファイルを配信する。
 # *** NOTE *** この例では、コンテンツファイルが公開されているか、少なくともアプリの全ユーザーが
 # すべてのファイルにアクセスできることを前提としています。また, これは低速でメモリを消費します.
-@bp.route("/content/<path>")
+@app.route("/content/<path>")
 async def content_file(path):
     logging.info("content_file: " + path)
     blob_container = current_app.config[CONFIG_BLOB_CLIENT].get_container_client(AZURE_STORAGE_CONTAINER)
@@ -93,7 +93,7 @@ async def content_file(path):
     blob_file.seek(0)
     return await send_file(blob_file, mimetype=mime_type, as_attachment=False, attachment_filename=path)
 
-@bp.route("/ask", methods=["POST"])
+@app.route("/ask", methods=["POST"])
 async def ask():
     if not request.is_json:
         return jsonify({"error": "request must be json"}), 415
@@ -114,7 +114,7 @@ async def ask():
         logging.exception("Exception in /ask")
         return jsonify({"error": str(e)}), 500
 
-@bp.route("/chat", methods=["POST"])
+@app.route("/chat", methods=["POST"])
 async def chat():
     if not request.is_json:
         return jsonify({"error": "request must be json"}), 415
@@ -138,7 +138,7 @@ async def format_as_ndjson(r: AsyncGenerator[dict, None]) -> AsyncGenerator[str,
     async for event in r:
         yield json.dumps(event, ensure_ascii=False) + "\n"
 
-@bp.route("/chat_stream", methods=["POST"])
+@app.route("/chat_stream", methods=["POST"])
 async def chat_stream():
     if not request.is_json:
         return jsonify({"error": "request must be json"}), 415
@@ -157,7 +157,7 @@ async def chat_stream():
         return jsonify({"error": str(e)}), 500
 
 
-@bp.before_request
+@app.before_request
 async def ensure_openai_token():
     openai_token = current_app.config[CONFIG_OPENAI_TOKEN]
     if openai_token.expires_on < time.time() + 60:
@@ -165,7 +165,7 @@ async def ensure_openai_token():
         current_app.config[CONFIG_OPENAI_TOKEN] = openai_token
         openai.api_key = openai_token.token
 
-@bp.before_app_serving
+@app.before_app_serving
 async def setup_clients():
 
     # Use the current user identity to authenticate with Azure OpenAI, Cognitive Search and Blob Storage (no secrets needed,
@@ -264,7 +264,7 @@ def create_app():
         configure_azure_monitor()
         AioHttpClientInstrumentor().instrument()
     app = Quart(__name__)
-    app.register_blueprint(bp)
+    app.register_blueprint(app)
     app.asgi_app = OpenTelemetryMiddleware(app.asgi_app)
 
     return app

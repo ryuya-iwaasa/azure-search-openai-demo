@@ -4,102 +4,102 @@
 
 # name: Build and deploy Python app to Azure Web App - WebAppDeployTestGit
 
-# on:
-#   push:
-#     branches:
-#       - main
-#   workflow_dispatch:
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - uses: actions/checkout@v4
+    steps:
+      - uses: actions/checkout@v4
 
-#       - name: Set up Python version
-#         uses: actions/setup-python@v1
-#         with:
-#           python-version: '3.10'
+      - name: Set up Python version
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.10'
 
-#       - name: Create and start virtual environment
-#         run: |
-#           python -m venv venv
-#           source venv/bin/activate
+      - name: Create and start virtual environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
       
-#       - name: Install dependencies
-#         run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
         
-#       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
+      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
-#       - name: Zip artifact for deployment
-#         run: zip release.zip ./* -r
+      - name: Zip artifact for deployment
+        run: zip release.zip ./* -r
 
-#       - name: Upload artifact for deployment jobs
-#         uses: actions/upload-artifact@v3
-#         with:
-#           name: python-app
-#           path: |
-#             release.zip
-#             !venv/
+      - name: Upload artifact for deployment jobs
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-app
+          path: |
+            release.zip
+            !venv/
 
-# <<<<<<< HEAD
-#   deploy:
-#     runs-on: ubuntu-latest
-#     needs: build
-#     environment:
-#       name: 'Production'
-#       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+<<<<<<< HEAD
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     
-#     steps:
-#       - name: Download artifact from build job
-#         uses: actions/download-artifact@v3
-#         with:
-#           name: python-app
-# =======
-#   deploy:
-#     runs-on: ubuntu-latest
-#     needs: build
-#     environment:
-#       name: 'Production'
-#       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-#     permissions:
-#       id-token: write #This is required for requesting the JWT
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: python-app
+=======
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    permissions:
+      id-token: write #This is required for requesting the JWT
 
-#     steps:
-#       - name: Download artifact from build job
-#         uses: actions/download-artifact@v3
-#         with:
-#           name: python-app
-# >>>>>>> 36e8e7427d2aef4d83e5689072e69cb8c25beb96
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: python-app
+>>>>>>> 36e8e7427d2aef4d83e5689072e69cb8c25beb96
 
-#       - name: Unzip artifact for deployment
-#         run: unzip release.zip
+      - name: Unzip artifact for deployment
+        run: unzip release.zip
 
-# <<<<<<< HEAD
+<<<<<<< HEAD
       
-#       - name: 'Deploy to Azure Web App'
-#         uses: azure/webapps-deploy@v2
-#         id: deploy-to-webapp
-#         with:
-#           app-name: 'WebAppDeployTestGit'
-#           slot-name: 'Production'
-#           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9ED965C0364A4E4A84D7F37DEE4C5D1F }}
+      - name: 'Deploy to Azure Web App'
+        uses: azure/webapps-deploy@v2
+        id: deploy-to-webapp
+        with:
+          app-name: 'WebAppDeployTestGit'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9ED965C0364A4E4A84D7F37DEE4C5D1F }}
       
-# =======
+=======
       
-#       - name: Login to Azure
-#         uses: azure/login@v1
-#         with:
-#           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2213522EEA39447B889B7CE87A798A85 }}
-#           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_D07AEB8F62D245AF8EB0C1D04D8B3279 }}
-#           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_75BA946484AF466FB1CDB598580FCD14 }}
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2213522EEA39447B889B7CE87A798A85 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_D07AEB8F62D245AF8EB0C1D04D8B3279 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_75BA946484AF466FB1CDB598580FCD14 }}
 
-#       - name: 'Deploy to Azure Web App'
-#         uses: azure/webapps-deploy@v2
-#         id: deploy-to-webapp
-#         with:
-#           app-name: 'WebAppDeployTestGit'
-#           slot-name: 'Production'
+      - name: 'Deploy to Azure Web App'
+        uses: azure/webapps-deploy@v2
+        id: deploy-to-webapp
+        with:
+          app-name: 'WebAppDeployTestGit'
+          slot-name: 'Production'
           
-# >>>>>>> 36e8e7427d2aef4d83e5689072e69cb8c25beb96
+>>>>>>> 36e8e7427d2aef4d83e5689072e69cb8c25beb96

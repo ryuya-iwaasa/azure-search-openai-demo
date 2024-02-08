@@ -56,8 +56,6 @@ CONFIG_BLOB_CLIENT = "blob_client"
 
 APPLICATIONINSIGHTS_CONNECTION_STRING = os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING")
 
-app = Flask(__name__)
-
 bp = Blueprint("routes", __name__, static_folder='static')
 
 @bp.route("/")
